@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { initialData } from "@/inital-data"; // Import initial data
+import { initialData } from "@/data/inital-data"; // Import initial data
 import { Post } from "@/components/new-post";
 
 interface StoreState {
@@ -7,6 +7,7 @@ interface StoreState {
   addPost: (post: Post) => void;
   removePost: (postId: number) => void;
   updatePostStatus: (postId: number, newStatus: Post["status"]) => void;
+  updatePost: (updatedPost: Post) => void; // Update post by ID
   setPosts: (posts: Post[]) => void; // function to update posts
 }
 
@@ -34,6 +35,14 @@ const useStore = create<StoreState>((set) => ({
     })),
 
   setPosts: (posts) => set({ posts }), // function to update posts
+
+  updatePost: (updatedPost: Post) => {
+    set((state) => ({
+      posts: state.posts.map((post) =>
+        post.id === updatedPost.id ? { ...post, ...updatedPost } : post
+      ),
+    }));
+  },
 }));
 
 export default useStore;
